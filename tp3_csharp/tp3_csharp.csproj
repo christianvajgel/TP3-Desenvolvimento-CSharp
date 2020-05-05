@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="ClassLibrary_tp3_csharp">
+      <HintPath>..\..\ClassLibrary_tp3_csharp\ClassLibrary_tp3_csharp\bin\Debug\netcoreapp3.1\ClassLibrary_tp3_csharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
