@@ -62,9 +62,9 @@ namespace tp3_csharp
                                 //Console.WriteLine(birthday);
 
                                 var person = new Person(firstName,surname, birthday);
-                                Repository.addPerson(person);
+                                Console.WriteLine(Repository.AddPerson(person));
                                 //Console.WriteLine(person.FirstName + "\n" + person.SurnameName + "\n" + person.Birthday);
-
+                                //Console.WriteLine("\n" + Repository.people[0].FirstName + Repository.people[0].SurnameName + Repository.people[0].Birthday);
                                 break;
                             };
                             break;
