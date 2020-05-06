@@ -3,6 +3,8 @@ using System;
 using System.Threading;
 using static ClassLibrary_tp3_csharp.Parsing;
 using static ClassLibrary_tp3_csharp.Validations;
+using static ClassLibrary_tp3_csharp.Person;
+using static ClassLibrary_tp3_csharp.Repository;
 
 namespace tp3_csharp
 {
@@ -23,53 +25,48 @@ namespace tp3_csharp
                     switch (operation)
                     {
                         case "1":
+                            break; //search people
+                        case "2":
                             while (true)
                             {
                                 ShowMenuAddPeople();
-                                var firstName = ReadString("name");
-                                var secondName = ReadString("name");
 
-                                var completeDate = new Func<string>(() =>
+                                var firstName = ReadString("firstName");
+                                var surname = ReadString("surname");
+
+                                var birthday = new Func<DateTime>(() =>
                                 {
                                     var completeDate = "";
+                                    var finalDate = new DateTime();
                                     do
                                     {
                                         var day = ReadNumber("day");
                                         var month = ReadNumber("month");
                                         var year = ReadNumber("year");
                                         completeDate = year + "/" + month + "/" + day;
-                                        if (DateValidation(completeDate) == default) { Console.WriteLine("Invalid date.\nTry again."); ClearScreen(); }
+                                        if (DateValidation(completeDate) == default)
+                                        {
+                                            Console.WriteLine("Invalid date.\nTry again.");
+                                            ClearScreen();
+                                        }
+                                        else 
+                                        {
+                                            finalDate = ConvertToDateTimeObject(day, month, year)[0];
+                                        }
                                     } while (DateValidation(completeDate) == default);
-                                    return completeDate;
+                                    return finalDate;
                                 })();
 
+                                //Console.WriteLine(firstName);
+                                //Console.WriteLine(surname);
+                                //Console.WriteLine(birthday);
 
+                                var person = new Person(firstName,surname, birthday);
+                                Repository.addPerson(person);
+                                //Console.WriteLine(person.FirstName + "\n" + person.SurnameName + "\n" + person.Birthday);
 
-                                var day = "";
-                                var month = "";
-                                var year = "";
-                                
-
-
-                                //if ()
-                                //{
-                                //    var finalDate = ConvertToDateTimeObject(day, month, year);
-                                //    Console.WriteLine(finalDate);
-                                //}
-                                //var finalDate = ConvertToDateTimeObject(day, month, year);
-                                Console.WriteLine(firstName);
-                                Console.WriteLine(secondName);
-                                Console.WriteLine(completeDate);
-
-
-                                //var birthday = ;
                                 break;
                             };
-                            break;
-                        // search people
-
-                        case "2":
-                            // add people
                             break;
                     }
                     //Console.Write("Enter with the first number: ");
@@ -148,7 +145,7 @@ namespace tp3_csharp
                                           "It must be an interger number between " +
                                           (Parsing.StringToInt(minimum)[0]).ToString() +
                                           " and " + (Parsing.StringToInt(maximum)[0]).ToString() +
-                                          ". \nTry again.");
+                                          ". \nTry again."); 
                     }
                 }
                 else
@@ -198,10 +195,11 @@ namespace tp3_csharp
                     Console.WriteLine("Error: Empty field.\n" +
                                       "Try again.");
                 }
-                Thread.Sleep(1000);
-                System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);
-                Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
-                Environment.Exit(0);
+                ClearScreen();
+                //Thread.Sleep(1000);
+                //System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);
+                //Console.Write("\r" + new string(' ', Console.WindowWidth) + "\r");
+                //Environment.Exit(0);
             }
         }
 
