@@ -5,13 +5,38 @@ using static ClassLibrary_tp3_csharp.Parsing;
 using static ClassLibrary_tp3_csharp.Validations;
 using static ClassLibrary_tp3_csharp.Person;
 using static ClassLibrary_tp3_csharp.Repository;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace tp3_csharp
 {
     class Program
     {
+
+        const int STD_OUTPUT_HANDLE = -11;
+        const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr GetStdHandle(int nStdHandle);
+
+        [DllImport("kernel32.dll")]
+        static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+        [DllImport("kernel32.dll")]
+        static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+
+
         static void Main(string[] args)
         {
+            var handle = GetStdHandle(STD_OUTPUT_HANDLE);
+            uint mode;
+            GetConsoleMode(handle, out mode);
+            mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(handle, mode);
+
+            const string UNDERLINE = "\x1B[4m";
+            const string RESET = "\x1B[0m";
+
             var id = 0;
             while (true)
             {
@@ -26,7 +51,44 @@ namespace tp3_csharp
                     switch (operation)
                     {
                         case "1":
-                            break; //search people
+                            while (true)
+                            {
+                                ShowMenuSearchPeople();
+                                var firstName = ReadString("firstName");
+                                var surname = ReadString("surname");
+                                var resultList = Repository.SearchPeople(firstName, surname);
+                                Loading();
+                                if (resultList.Any())
+                                {
+                                    Console.WriteLine($"\n\nSearch Results " +
+                                                          $"for the contexts {UNDERLINE}{firstName.ToUpper()}{RESET} " +
+                                                          $"and {UNDERLINE}{surname.ToUpper()}{RESET}:\n");
+                                    foreach (var result in resultList)
+                                    {
+                                        Console.WriteLine($"ID: {result.Id}\n" +
+                                                          $"Name: {result.FirstName}\n" +
+                                                          $"Surname: {result.SurnameName}\n" +
+                                                          $"Birthday: {result.Birthday}\n" +
+                                                          $"\n- - - - - - - - - - - - - - - - - - - - - -\n");
+                                    }
+                                    Console.WriteLine($"Choose de ID of the desired " +
+                                                      $"person to check the countdown.\n");
+                                    var numberID = ReadNumber("id");
+                                    var countdown = DateCountdown(numberID);
+                                    var verb = "are";
+                                    var dayWord = "days";
+                                    if (countdown == 1) { verb = "is"; dayWord = "day"; }
+                                    Console.WriteLine($"There {verb} {countdown} {dayWord} before {PersonFullName(numberID)}'s birthday.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"\nNo results were found with these " +
+                                                      $"search contexts: '{UNDERLINE}{firstName}{RESET}' " +
+                                                      $"and '{UNDERLINE}{surname}{RESET}'.\nTry again.");
+                                }
+                                break;
+                            }
+                            break;
                         case "2":
                             while (true)
                             {
@@ -99,8 +161,12 @@ namespace tp3_csharp
 
         public static void ShowMenuAddPeople()
         {
-            Console.WriteLine("\n*** C# Birthday Manager ***\n\n  " +
-                                        "Add a new person:\n");
+            Console.WriteLine("\nAdd a new person:\n\n");
+        }
+
+        public static void ShowMenuSearchPeople()
+        {
+            Console.WriteLine("\nSearch for a person:\n\n");
         }
 
         public static string ReadNumber(string option)
@@ -113,6 +179,7 @@ namespace tp3_csharp
                     "day" => InputLoopNumber("1", "31", "day"),
                     "month" => InputLoopNumber("1", "12", "month"),
                     "year" => InputLoopNumber("1", "9999", "year"),
+                    "id" => InputLoopNumber("0", (Repository.people.Count()-1).ToString(), "ID number"),
                     _ => null,
                 };
             })();
@@ -188,7 +255,8 @@ namespace tp3_csharp
                 var inputString = Console.ReadLine().Trim();
                 if (!String.IsNullOrEmpty(inputString))
                 {
-                    if (StringValidation(inputString)[0].Equals("valid") && !StringValidation(inputString)[1].Equals("valid"))
+                    if (StringValidation(inputString)[0].Equals("valid") &&
+                       !StringValidation(inputString)[1].Equals("valid"))
                     {
                         return inputString;
                     }
@@ -231,14 +299,14 @@ namespace tp3_csharp
             return year;
         }
 
-        public static void SearchPeople()
-        {
-
-        }
-
-        public static void AddPeople()
-        {
-
+        public static void Loading() {
+            Console.WriteLine("\n\nSearching");
+            for (var i = 0; i <= 30; i++) 
+            {
+                Console.Write("-");
+                Thread.Sleep(250);
+                if (i == 30) { Console.WriteLine("\n"); }
+            }
         }
     }
 }
