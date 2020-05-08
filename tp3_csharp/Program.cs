@@ -12,6 +12,7 @@ namespace tp3_csharp
     {
         static void Main(string[] args)
         {
+            var id = 0;
             while (true)
             {
                 ShowMenu();
@@ -56,15 +57,21 @@ namespace tp3_csharp
                                     } while (DateValidation(completeDate) == default);
                                     return finalDate;
                                 })();
+                                
+                                var person = new Person(id,firstName,surname, birthday);
+                                var message = Repository.AddPerson(person);
+                                Console.WriteLine(message);
+                                //if (message.Equals("Person added.")) { id++; }
 
-                                //Console.WriteLine(firstName);
-                                //Console.WriteLine(surname);
-                                //Console.WriteLine(birthday);
-
-                                var person = new Person(firstName,surname, birthday);
-                                Console.WriteLine(Repository.AddPerson(person));
-                                //Console.WriteLine(person.FirstName + "\n" + person.SurnameName + "\n" + person.Birthday);
-                                //Console.WriteLine("\n" + Repository.people[0].FirstName + Repository.people[0].SurnameName + Repository.people[0].Birthday);
+                                if (message.Equals("Person added."))
+                                {
+                                    var bList = Repository.SearchPeople();
+                                    foreach (var p in bList)
+                                    {
+                                        Console.WriteLine($"ID: {p.Id} Name: {p.FirstName} Surname: {p.SurnameName} Birthday: {p.Birthday}");
+                                    }
+                                    id++;
+                                } 
                                 break;
                             };
                             break;
