@@ -50,28 +50,28 @@ namespace tp3_csharp
                                             Console.WriteLine("Invalid date.\nTry again.");
                                             ClearScreen();
                                         }
-                                        else 
+                                        else
                                         {
                                             finalDate = ConvertToDateTimeObject(day, month, year)[0];
                                         }
                                     } while (DateValidation(completeDate) == default);
                                     return finalDate;
                                 })();
-                                
-                                var person = new Person(id,firstName,surname, birthday);
-                                var message = Repository.AddPerson(person);
-                                Console.WriteLine(message);
-                                //if (message.Equals("Person added.")) { id++; }
 
-                                if (message.Equals("Person added."))
-                                {
-                                    var bList = Repository.SearchPeople();
-                                    foreach (var p in bList)
-                                    {
-                                        Console.WriteLine($"ID: {p.Id} Name: {p.FirstName} Surname: {p.SurnameName} Birthday: {p.Birthday}");
-                                    }
-                                    id++;
-                                } 
+                                var person = new Person(id, firstName, surname, birthday);
+                                var message = Repository.AddPerson(person);
+                                if (message.Equals("Person added.")) { id++; }
+                                Console.WriteLine(message);
+
+                                //if (message.Equals("Person added."))
+                                //{
+                                //    var bList = Repository.SearchPeople();
+                                //    foreach (var p in bList)
+                                //    {
+                                //        Console.WriteLine($"ID: {p.Id} Name: {p.FirstName} Surname: {p.SurnameName} Birthday: {p.Birthday}");
+                                //    }
+                                //    id++;
+                                //}
                                 break;
                             };
                             break;
@@ -152,7 +152,7 @@ namespace tp3_csharp
                                           "It must be an interger number between " +
                                           (Parsing.StringToInt(minimum)[0]).ToString() +
                                           " and " + (Parsing.StringToInt(maximum)[0]).ToString() +
-                                          ". \nTry again."); 
+                                          ". \nTry again.");
                     }
                 }
                 else
@@ -171,7 +171,7 @@ namespace tp3_csharp
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, currentLineCursor);
         }
-        
+
         public static void ClearScreen()
         {
             Thread.Sleep(1000);
