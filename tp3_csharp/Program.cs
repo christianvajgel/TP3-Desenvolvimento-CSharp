@@ -119,7 +119,6 @@ namespace tp3_csharp
                                     } while (DateValidation(completeDate) == default);
                                     return finalDate;
                                 })();
-
                                 var person = new Person(id, firstName, surname, birthday);
                                 var message = Repository.AddPerson(person);
                                 if (message.Equals("Person added.")) { id++; }
@@ -214,14 +213,6 @@ namespace tp3_csharp
                 }
                 ClearScreen(false);
             }
-        }
-
-        public static void ClearCurrentConsoleLine()
-        {
-            int currentLineCursor = Console.CursorTop;
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, currentLineCursor);
         }
 
         public static void ClearScreen(bool returnType)
