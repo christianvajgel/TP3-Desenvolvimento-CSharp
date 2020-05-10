@@ -96,7 +96,6 @@ namespace tp3_csharp
 
                                 var firstName = ReadString("firstName");
                                 var surname = ReadString("surname");
-
                                 var birthday = new Func<DateTime>(() =>
                                 {
                                     var completeDate = "";
@@ -121,6 +120,7 @@ namespace tp3_csharp
                                 })();
                                 var person = new Person(id, firstName, surname, birthday);
                                 var message = Repository.AddPerson(person);
+
                                 if (message.Equals("Person added.")) { id++; }
                                 Console.WriteLine(message);
                                 ClearScreen(false);
